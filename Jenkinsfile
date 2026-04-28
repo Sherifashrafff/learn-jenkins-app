@@ -36,14 +36,13 @@ pipeline {
                 docker {
                     image 'mcr.microsoft.com/playwright:v1.58.2-noble'
                     reuseNode true
-                    args '-u root:root'
                 }
             }
             steps {
                 sh '''
                     npm install -g serve
-                    serve -s build &
-                    sleep 5
+                    /node_modules/.bin/serve -s build &
+                    sleep 10
                     npx playwright test
                 '''
             }
@@ -51,7 +50,7 @@ pipeline {
     }
     post {
         always {
-            junit 'test-results/junit.xml'
+            junit 'jest-results/junit.xml'
         }
     }
 }
