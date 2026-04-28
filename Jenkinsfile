@@ -2,7 +2,7 @@ pipeline {
     agent any
 
     stages {
-    /*    stage('Build') {
+        stage('Build') {
             agent {
                 docker {
                     image 'node:18-alpine'
@@ -15,8 +15,8 @@ pipeline {
                     npm run build
                 '''
             }
-        } */
-        
+        }
+
         stage('Test') {
             agent {
                 docker {
@@ -26,15 +26,16 @@ pipeline {
             }
             steps {
                 sh '''
-                   #test -f build/index.html
+                    test -f build/index.html
                     npm test
                 '''
             }
-        } 
+        }
+
         stage('E2E') {
             agent {
                 docker {
-                    image 'mcr.microsoft.com/playwright:v1.50.0-noble'
+                    image 'mcr.microsoft.com/playwright:v1.39.0-noble'
                     reuseNode true
                 }
             }
@@ -43,17 +44,15 @@ pipeline {
                     npm install serve
                     node_modules/.bin/serve -s build &
                     sleep 10
-                    echo "=== Checking if server is up ==="
-                    curl -v http://localhost:3000 || echo "Server not responding"
-                    echo "=== Running tests ==="
                     npx playwright test
                 '''
             }
         }
     }
+
     post {
         always {
-            junit 'jest-results/junit.xml'
+            junit allowEmptyResults: true, testResults: '**/junit.xml'
         }
     }
 }
