@@ -43,6 +43,9 @@ pipeline {
                     npm install serve
                     node_modules/.bin/serve -s build &
                     sleep 10
+                    echo "=== Checking if server is up ==="
+                    curl -v http://localhost:3000 || echo "Server not responding"
+                    echo "=== Running tests ==="
                     npx playwright test
                 '''
             }
