@@ -1,7 +1,7 @@
 pipeline {
     agent any
 
-        stages {
+/*        stages {
         stage('Build') {
             agent {
                 docker {
@@ -15,7 +15,7 @@ pipeline {
                     npm run build
                 '''
             }
-        } 
+        } */
 
         stage('Test') {
             agent {
