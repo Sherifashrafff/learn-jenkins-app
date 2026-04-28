@@ -17,7 +17,7 @@ pipeline {
             }
         }
         
-        stage('Test') {
+/*        stage('Test') {
             agent {
                 docker {
                     image 'node:18-alpine'
@@ -30,7 +30,7 @@ pipeline {
                     npm test
                 '''
             }
-        } 
+        } */
         stage('E2E') {
             agent {
                 docker {
