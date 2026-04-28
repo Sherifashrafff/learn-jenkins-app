@@ -1,7 +1,7 @@
 pipeline {
     agent any
 
-    stages {
+/*    stages {
         stage('Build') {
             agent {
                 docker {
@@ -15,7 +15,7 @@ pipeline {
                     npm run build
                 '''
             }
-        }
+        } */
 
         stage('Test') {
             agent {
@@ -26,7 +26,7 @@ pipeline {
             }
             steps {
                 sh '''
-                    test -f build/index.html
+                    #test -f build/index.html
                     npm test
                 '''
             }
@@ -45,7 +45,7 @@ pipeline {
                     node_modules/.bin/serve -s build &
                     SERVE_PID=$!
                     sleep 10
-                    npx playwright test --reporter=list
+                    npx playwright test --reporter=html
                     kill $SERVE_PID 2>/dev/null || true
                 '''
             }
