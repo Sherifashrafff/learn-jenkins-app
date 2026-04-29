@@ -6,7 +6,7 @@ pipeline {
     }
 
     stages {
-/*        stage('Install & Build') {
+        /*stage('Install & Build') {
             agent {
                 docker {
                     image 'node:18-alpine'
@@ -87,14 +87,14 @@ pipeline {
             }
         }
 
-        stage('Netlify Deploy'){
-            agent{
-                docker{
+        stage('Netlify Deploy') {
+            agent {
+                docker {
                     image 'node:18-alpine'
                     reuseNode true
                 }
             }
-            steps{
+            steps {
                 sh '''
                     npm config set fetch-timeout 120000
                     npm install netlify-cli@20.1.1
@@ -104,9 +104,9 @@ pipeline {
                 '''
             }
         }
-    }
+
         stage('E2E Prod Tests') {
-            environment{
+            environment {
                 CI_ENVIRONMENT_URL='https://heartfelt-malasada-564a26.netlify.app'
             }
             agent {
@@ -128,11 +128,13 @@ pipeline {
                         keepAll: true,
                         reportDir: 'playwright-report-prod',
                         reportFiles: 'index.html',
-                        reportName: 'Playwright Report'
+                        reportName: 'Playwright Report Prod'
                     ])
                 }
             }
         }
+    }
+
     post {
         always {
             junit allowEmptyResults: true, testResults: '**/junit.xml'
