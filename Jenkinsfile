@@ -105,7 +105,34 @@ pipeline {
             }
         }
     }
-
+        stage('E2E Prod Tests') {
+            environment{
+                CI_ENVIRONMENT_URL='https://heartfelt-malasada-564a26.netlify.app'
+            }
+            agent {
+                docker {
+                    image 'mcr.microsoft.com/playwright:v1.39.0-jammy'
+                    reuseNode true
+                }
+            }
+            steps {
+                sh '''
+                    npx playwright test --reporter=html,list 
+                '''
+            }
+            post {
+                always {
+                    publishHTML([
+                        allowMissing: true,
+                        alwaysLinkToLastBuild: true,
+                        keepAll: true,
+                        reportDir: 'playwright-report-prod',
+                        reportFiles: 'index.html',
+                        reportName: 'Playwright Report'
+                    ])
+                }
+            }
+        }
     post {
         always {
             junit allowEmptyResults: true, testResults: '**/junit.xml'
