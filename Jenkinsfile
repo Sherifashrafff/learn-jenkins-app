@@ -87,7 +87,31 @@ pipeline {
             }
         }
 
-        stage('Netlify Deploy') {
+        stage('Netlify Deploy on Staging') {
+            agent {
+                docker {
+                    image 'node:18-alpine'
+                    reuseNode true
+                }
+            }
+            steps {
+                sh '''
+                    npm config set fetch-timeout 120000
+                    npm install netlify-cli@20.1.1
+                    node_modules/.bin/netlify --version
+                    node_modules/.bin/netlify status
+                    node_modules/.bin/netlify deploy --dir=build
+                '''
+            }
+        }
+        stage('Manual Approval'){
+            steps{
+                timeout(5) {
+                        input 'Are you ready for Deploying?'
+                }
+            }
+        }
+        stage('Netlify Deploy on Prod') {
             agent {
                 docker {
                     image 'node:18-alpine'
